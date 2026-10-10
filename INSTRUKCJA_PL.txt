@@ -1,28 +1,10 @@
-ROZLICZENIE PRACY — WERSJA DO INSTALACJI NA TELEFONIE
+MK BROWS & LASHES — AKTUALIZACJA APLIKACJI
 
-Zawartość:
-- index.html — aplikacja
-- manifest.webmanifest — nazwa i ikona aplikacji
-- service-worker.js — pozwala zapisać aplikację do działania offline
-- icons/ — ikony
+1. Zrób kopię zapasową wpisów w aplikacji przed aktualizacją.
+2. Rozpakuj archiwum ZIP.
+3. Na GitHubie otwórz repozytorium rozliczenie-pracy i wybierz Add file → Upload files.
+4. Przeciągnij zawartość tego folderu (index.html, manifest.webmanifest, service-worker.js, INSTRUKCJA_PL.txt oraz folder icons) do okna GitHuba.
+5. Zatwierdź przez Commit changes.
+6. Otwórz aplikację pod dotychczasowym adresem i odśwież ją. Jeśli telefon pokazuje starą wersję, zamknij aplikację całkowicie i otwórz ponownie; może być potrzebne odświeżenie pamięci podręcznej.
 
-JAK OPUBLIKOWAĆ ZA DARMO PRZEZ GITHUB PAGES:
-1. Na komputerze zaloguj się na github.com lub utwórz konto.
-2. Utwórz nowe publiczne repozytorium, np. rozliczenie-pracy.
-3. Wgraj do repozytorium wszystkie pliki i folder icons/ (nie sam ZIP).
-4. W repozytorium otwórz Settings > Pages.
-5. W sekcji Build and deployment wybierz Deploy from a branch, branch main, folder /(root), kliknij Save.
-6. Po chwili GitHub pokaże adres strony, zwykle https://NAZWA-UZYTKOWNIKA.github.io/rozliczenie-pracy/
-7. Otwórz ten adres w Chrome na Androidzie, naciśnij ⋮ i wybierz „Zainstaluj aplikację” albo „Dodaj do ekranu głównego”.
-
-WAŻNE:
-- Wersja webowa zapisuje dane lokalnie na danym urządzeniu/przeglądarce.
-- Nie udostępniaj linku z danymi osobistymi; aplikacja nie wysyła wpisów na serwer.
-- Zrób eksport CSV jako kopię zapasową.
-- Do instalacji PWA potrzebny jest adres HTTPS, dlatego lokalny plik HTML nie wystarcza.
-
-KOPIE ZAPASOWE:
-- W aplikacji otwórz sekcję „Kopia zapasowa” i kliknij „Pobierz kopię zapasową”.
-- Plik JSON zawiera ustawienia i wszystkie wpisy. Przechowuj go również poza telefonem.
-- Aby odzyskać dane, wybierz „Przywróć z pliku” i wskaż kopię JSON.
-- Eksport pliku wymaga zatwierdzenia pobierania przez przeglądarkę; automatyczne ciche zapisywanie do folderu plików nie jest gwarantowane na Androidzie.
+Ważne: plik index.html zachowuje dotychczasowe klucze localStorage (workEntries, workRate, workCommission), więc wpisy zapisane na tym samym urządzeniu i pod tym samym adresem powinny pozostać. Mimo to zrób kopię przed aktualizacją. Dane nie synchronizują się między urządzeniami.

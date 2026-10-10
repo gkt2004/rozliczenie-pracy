@@ -1,0 +1,80 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#17324d"><title>Rozliczenie pracy</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fa;color:#17212b;font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}header{background:#17324d;color:white;padding:20px 16px}h1{font-size:23px;margin:0 0 4px}header p{margin:0;color:#d7e4f0;font-size:14px}main{max-width:760px;margin:auto;padding:12px;display:grid;gap:12px}.card{background:white;border:1px solid #dce3eb;border-radius:15px;padding:15px}h2{font-size:18px;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:grid;gap:5px}.field label{font-size:13px;color:#637181;font-weight:650}.field input{width:100%;min-width:0;border:1px solid #c9d4df;border-radius:10px;padding:11px;font:inherit;background:white;color:#17212b}button{border:0;border-radius:10px;padding:11px 13px;font:600 14px system-ui;cursor:pointer}.primary{background:#2864a5;color:white}.secondary{background:#eaf0f6;color:#17324d}.danger{background:#fff0ef;color:#b42318}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.hint,.small{font-size:12px;color:#637181}.hint{margin:8px 0 0}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{padding:12px;border-radius:11px;background:#f5f8fb;border:1px solid #dce3eb}.stat span{display:block;color:#637181;font-size:12px}.stat strong{display:block;font-size:19px;margin-top:4px;overflow-wrap:anywhere}.total{background:#eaf6ef;border-color:#b9e2ca;grid-column:1/-1}.total strong{color:#147d52;font-size:23px}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #dce3eb;white-space:nowrap}th{color:#637181}td.num,th.num{text-align:right}.rowactions{display:flex;gap:5px}.rowactions button{padding:6px 8px;font-size:12px}.empty{padding:18px;text-align:center;color:#637181;background:#f7f9fb;border-radius:10px}@media(max-width:420px){main{padding:9px}.card{padding:12px}.stat strong{font-size:17px}}
+</style>  <link rel="manifest" href="manifest.webmanifest">
+</head><body><header><h1>Rozliczenie pracy</h1><p>Godziny + prowizja od utargu · prywatne rozliczenie</p></header><main>
+<section class="card"><h2>Ustawienia wynagrodzenia</h2><div class="grid"><div class="field"><label for="rate">Stawka za godzinę (zł)</label><input id="rate" type="number" min="0" step="0.01" value="25"></div><div class="field"><label for="commission">Prowizja od usług (%)</label><input id="commission" type="number" min="0" max="100" step="0.1" value="30"></div></div><p class="hint">Ustaw stawkę i procent. Zmiana ustawień przeliczy zapisane dni.</p></section>
+<section class="card"><h2>Dodaj dzień pracy</h2><div class="grid"><div class="field"><label for="date">Data</label><input id="date" type="date"></div><div class="field"><label for="hours">Przepracowane godziny</label><input id="hours" type="number" min="0" step="0.25" placeholder="np. 7,5"></div><div class="field" style="grid-column:1/-1"><label for="sales">Wartość usług / utarg (zł)</label><input id="sales" type="number" min="0" step="0.01" placeholder="np. 850"></div></div><div class="actions"><button class="primary" id="saveEntry">Dodaj dzień</button><button class="secondary" id="cancelEdit" hidden>Anuluj edycję</button></div><p class="hint">Wpisz łączną wartość usług przed naliczeniem prowizji.</p></section>
+<section class="card"><h2>Podsumowanie miesiąca</h2><div class="field" style="margin-bottom:12px"><label for="month">Wybrany miesiąc</label><input id="month" type="month"></div><div class="stats"><div class="stat"><span>Godziny pracy</span><strong id="sumHours">0 h</strong></div><div class="stat"><span>Wartość usług</span><strong id="sumSales">0,00 zł</strong></div><div class="stat"><span>Wynagrodzenie godzinowe</span><strong id="sumBase">0,00 zł</strong></div><div class="stat"><span>Prowizja</span><strong id="sumCommission">0,00 zł</strong></div><div class="stat total"><span>RAZEM DO ROZLICZENIA</span><strong id="sumTotal">0,00 zł</strong></div></div><div class="actions"><button class="secondary" id="exportCsv">Eksportuj miesiąc do CSV</button></div><p class="hint">Kwota to stawka godzinowa + prowizja. Nie uwzględnia podatków ani potrąceń.</p></section>
+<section class="card"><h2>Wpisy w wybranym miesiącu</h2><div id="entries"></div><div class="actions"><button class="danger" id="clearMonth">Usuń wpisy z tego miesiąca</button></div></section><section class="card"><h2>Ważne</h2><p class="small">Dane zapisują się w pamięci przeglądarki na tym urządzeniu i nie są wysyłane na serwer. Eksportuj CSV jako kopię zapasową. Jeśli otwieranie pliku lokalnego nie zachowa danych, zapisz go na prywatnym hostingu lub użyj tego samego pliku w tej samej przeglądarce.</p></section></main>
+<script>
+const $=id=>document.getElementById(id),money=n=>Number(n||0).toLocaleString('pl-PL',{style:'currency',currency:'PLN'}),num=n=>Number(n||0);const now=new Date(),today=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`,thisMonth=today.slice(0,7);$('date').value=today;$('month').value=thisMonth;let entries=[],editingId=null;try{entries=JSON.parse(localStorage.getItem('workEntries')||'[]');$('rate').value=localStorage.getItem('workRate')??'25';$('commission').value=localStorage.getItem('workCommission')??'30'}catch(e){}
+function save(){try{localStorage.setItem('workEntries',JSON.stringify(entries));localStorage.setItem('workRate',$('rate').value);localStorage.setItem('workCommission',$('commission').value)}catch(e){}}function calc(e){let h=num(e.hours),s=num(e.sales),base=h*num($('rate').value),comm=s*Math.max(0,Math.min(100,num($('commission').value)))/100;return{h,s,base,comm,total:base+comm}}
+function render(){save();let m=$('month').value||thisMonth,list=entries.filter(e=>e.date.startsWith(m)).sort((a,b)=>b.date.localeCompare(a.date)),h=0,s=0,b=0,c=0;list.forEach(e=>{let v=calc(e);h+=v.h;s+=v.s;b+=v.base;c+=v.comm});$('sumHours').textContent=h.toLocaleString('pl-PL',{maximumFractionDigits:2})+' h';$('sumSales').textContent=money(s);$('sumBase').textContent=money(b);$('sumCommission').textContent=money(c);$('sumTotal').textContent=money(b+c);let box=$('entries');if(!list.length){box.innerHTML='<div class="empty">Brak wpisów w tym miesiącu. Dodaj pierwszy dzień powyżej.</div>';return}box.innerHTML='<div class="tablewrap"><table><thead><tr><th>Data</th><th class="num">Godz.</th><th class="num">Usługi</th><th class="num">Razem</th><th>Akcje</th></tr></thead><tbody>'+list.map(e=>{let v=calc(e);return `<tr><td>${e.date.split('-').reverse().join('.')}</td><td class="num">${v.h.toLocaleString('pl-PL')}</td><td class="num">${money(v.s)}</td><td class="num"><b>${money(v.total)}</b></td><td><div class="rowactions"><button class="secondary" data-edit="${e.id}">Edytuj</button><button class="danger" data-del="${e.id}">Usuń</button></div></td></tr>`}).join('')+'</tbody></table></div>';box.querySelectorAll('[data-edit]').forEach(x=>x.onclick=()=>edit(x.dataset.edit));box.querySelectorAll('[data-del]').forEach(x=>x.onclick=()=>{if(confirm('Usunąć ten wpis?')){entries=entries.filter(e=>e.id!==x.dataset.del);render()}})}
+function reset(){editingId=null;$('date').value=today;$('hours').value='';$('sales').value='';$('saveEntry').textContent='Dodaj dzień';$('cancelEdit').hidden=true}function edit(id){let e=entries.find(x=>x.id===id);if(!e)return;editingId=id;$('date').value=e.date;$('hours').value=e.hours;$('sales').value=e.sales;$('saveEntry').textContent='Zapisz zmiany';$('cancelEdit').hidden=false;window.scrollTo({top:0,behavior:'smooth'})}
+$('saveEntry').onclick=()=>{let d=$('date').value,h=$('hours').value,s=$('sales').value;if(!d){alert('Wybierz datę.');return}if(h===''&&s===''){alert('Wpisz godziny lub wartość usług.');return}if(num(h)<0||num(s)<0){alert('Wartości nie mogą być ujemne.');return}let o={id:editingId||String(Date.now())+Math.random().toString(16).slice(2),date:d,hours:num(h),sales:num(s)};if(editingId)entries=entries.map(e=>e.id===editingId?o:e);else entries.push(o);$('month').value=d.slice(0,7);reset();render()};$('cancelEdit').onclick=reset;$('rate').oninput=render;$('commission').oninput=render;$('month').onchange=render;$('clearMonth').onclick=()=>{let m=$('month').value;if(confirm('Usunąć wszystkie wpisy z miesiąca '+m+'?')){entries=entries.filter(e=>!e.date.startsWith(m));reset();render()}};$('exportCsv').onclick=()=>{let m=$('month').value||thisMonth,list=entries.filter(e=>e.date.startsWith(m)).sort((a,b)=>a.date.localeCompare(b.date)),rows=[['Data','Godziny','Wartość usług (zł)','Wynagrodzenie godzinowe (zł)','Prowizja (zł)','Razem (zł)']];list.forEach(e=>{let v=calc(e);rows.push([e.date,v.h,v.s,v.base,v.comm,v.total])});let csv='\ufeff'+rows.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(';')).join('\r\n'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'})),a=document.createElement('a');a.href=url;a.download='rozliczenie-'+m+'.csv';a.click();URL.revokeObjectURL(url)};render();
+
+// Kopia zapasowa: eksport ustawień i wpisów do pliku JSON.
+function backupPayload(){
+  return {
+    app: "Rozliczenie pracy",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    settings: {
+      rate: document.getElementById('rate').value,
+      commission: document.getElementById('commission').value
+    },
+    entries: entries
+  };
+}
+function downloadBackup(){
+  const payload = backupPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `rozliczenie-pracy-kopia-${stamp}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 1500);
+  const status = document.getElementById('backupStatus');
+  if(status) status.textContent = 'Przygotowano kopię do pobrania. Sprawdź folder Pobrane.';
+}
+document.getElementById('backupNow')?.addEventListener('click', downloadBackup);
+document.getElementById('restoreBackup')?.addEventListener('click', ()=>document.getElementById('backupFile').click());
+document.getElementById('backupFile')?.addEventListener('change', async event => {
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if(!data || data.app !== 'Rozliczenie pracy' || !Array.isArray(data.entries) || !data.settings) {
+      throw new Error('Nieprawidłowy plik kopii zapasowej.');
+    }
+    if(!confirm('Przywrócić kopię? Obecne wpisy zostaną zastąpione danymi z pliku.')) return;
+    entries = data.entries.filter(e => e && typeof e.date === 'string').map(e => ({
+      id: String(e.id || (Date.now()+Math.random())),
+      date: e.date,
+      hours: Number(e.hours || 0),
+      sales: Number(e.sales || 0)
+    }));
+    document.getElementById('rate').value = data.settings.rate ?? '25';
+    document.getElementById('commission').value = data.settings.commission ?? '30';
+    if(entries.length) document.getElementById('month').value = entries.slice().sort((a,b)=>b.date.localeCompare(a.date))[0].date.slice(0,7);
+    render();
+    const status = document.getElementById('backupStatus');
+    if(status) status.textContent = `Przywrócono kopię. Wpisów: ${entries.length}.`;
+    alert('Kopia została przywrócona.');
+  } catch(err) {
+    alert('Nie udało się przywrócić kopii: ' + (err.message || 'nieprawidłowy plik.'));
+  } finally {
+    event.target.value = '';
+  }
+});
+
+</script><script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
+</script>
+</body></html>

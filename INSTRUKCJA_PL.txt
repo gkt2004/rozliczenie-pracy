@@ -1,0 +1,28 @@
+ROZLICZENIE PRACY — WERSJA DO INSTALACJI NA TELEFONIE
+
+Zawartość:
+- index.html — aplikacja
+- manifest.webmanifest — nazwa i ikona aplikacji
+- service-worker.js — pozwala zapisać aplikację do działania offline
+- icons/ — ikony
+
+JAK OPUBLIKOWAĆ ZA DARMO PRZEZ GITHUB PAGES:
+1. Na komputerze zaloguj się na github.com lub utwórz konto.
+2. Utwórz nowe publiczne repozytorium, np. rozliczenie-pracy.
+3. Wgraj do repozytorium wszystkie pliki i folder icons/ (nie sam ZIP).
+4. W repozytorium otwórz Settings > Pages.
+5. W sekcji Build and deployment wybierz Deploy from a branch, branch main, folder /(root), kliknij Save.
+6. Po chwili GitHub pokaże adres strony, zwykle https://NAZWA-UZYTKOWNIKA.github.io/rozliczenie-pracy/
+7. Otwórz ten adres w Chrome na Androidzie, naciśnij ⋮ i wybierz „Zainstaluj aplikację” albo „Dodaj do ekranu głównego”.
+
+WAŻNE:
+- Wersja webowa zapisuje dane lokalnie na danym urządzeniu/przeglądarce.
+- Nie udostępniaj linku z danymi osobistymi; aplikacja nie wysyła wpisów na serwer.
+- Zrób eksport CSV jako kopię zapasową.
+- Do instalacji PWA potrzebny jest adres HTTPS, dlatego lokalny plik HTML nie wystarcza.
+
+KOPIE ZAPASOWE:
+- W aplikacji otwórz sekcję „Kopia zapasowa” i kliknij „Pobierz kopię zapasową”.
+- Plik JSON zawiera ustawienia i wszystkie wpisy. Przechowuj go również poza telefonem.
+- Aby odzyskać dane, wybierz „Przywróć z pliku” i wskaż kopię JSON.
+- Eksport pliku wymaga zatwierdzenia pobierania przez przeglądarkę; automatyczne ciche zapisywanie do folderu plików nie jest gwarantowane na Androidzie.

@@ -1,13 +1,14 @@
-MK BROWS & LASHES — AKTUALIZACJA APLIKACJI
+MK Brows & Lashes — aktualizacja z prywatnym rejestrem pracy w domu
 
-1. Zrób kopię zapasową wpisów w aplikacji przed aktualizacją.
-2. Rozpakuj archiwum ZIP.
-3. Na GitHubie otwórz repozytorium rozliczenie-pracy i wybierz Add file → Upload files.
-4. Przeciągnij zawartość tego folderu (index.html, manifest.webmanifest, service-worker.js, INSTRUKCJA_PL.txt oraz folder icons) do okna GitHuba.
-5. Zatwierdź przez Commit changes.
-6. Otwórz aplikację pod dotychczasowym adresem i odśwież ją. Jeśli telefon pokazuje starą wersję, zamknij aplikację całkowicie i otwórz ponownie; może być potrzebne odświeżenie pamięci podręcznej.
+WDROŻENIE
+1. Zrób kopię zapasową w obecnej aplikacji.
+2. Rozpakuj ZIP.
+3. W repozytorium GitHub wybierz Add file → Upload files.
+4. Wgraj zawartość tego folderu (index.html, service-worker.js, manifest.webmanifest, mk-logo.png i folder icons) do katalogu głównego.
+5. Kliknij Commit changes. Nie zmieniaj adresu repozytorium.
 
-Ważne: plik index.html zachowuje dotychczasowe klucze localStorage (workEntries, workRate, workCommission), więc wpisy zapisane na tym samym urządzeniu i pod tym samym adresem powinny pozostać. Mimo to zrób kopię przed aktualizacją. Dane nie synchronizują się między urządzeniami.
+UŻYWANIE UKRYTEJ SEKCJI
+Kliknij logo MK pięć razy w krótkim odstępie. Przy pierwszym wejściu ustawisz hasło, potem będzie ono wymagane. Sekcja ma osobne wpisy, podsumowania i eksport CSV.
 
-
-Paleta: kremowa biel i szampańskie złoto. Oryginalne logo MK pozostawiono bez zmian.
+WAŻNE O PRYWATNOŚCI
+Hasło i wpisy są zapisane lokalnie w przeglądarce. To ukryta sekcja, nie profesjonalne zabezpieczenie: osoba mająca dostęp do urządzenia lub plików aplikacji może je obejść. Dane domowe są osobne od salonowych. Kopia JSON obejmuje również wpisy domowe po tej aktualizacji.

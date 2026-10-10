@@ -8,3 +8,6 @@ MK BROWS & LASHES — AKTUALIZACJA APLIKACJI
 6. Otwórz aplikację pod dotychczasowym adresem i odśwież ją. Jeśli telefon pokazuje starą wersję, zamknij aplikację całkowicie i otwórz ponownie; może być potrzebne odświeżenie pamięci podręcznej.
 
 Ważne: plik index.html zachowuje dotychczasowe klucze localStorage (workEntries, workRate, workCommission), więc wpisy zapisane na tym samym urządzeniu i pod tym samym adresem powinny pozostać. Mimo to zrób kopię przed aktualizacją. Dane nie synchronizują się między urządzeniami.
+
+
+Paleta: kremowa biel i szampańskie złoto. Oryginalne logo MK pozostawiono bez zmian.
